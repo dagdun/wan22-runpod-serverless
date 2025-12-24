@@ -182,8 +182,12 @@ def handler(job):
         lora_pairs = lora_pairs[:4]
     
     # 워크플로우 파일 선택 (end_image_*가 있으면 FLF2V 워크플로 사용)
-    workflow_file = "/new_Wan22_flf2v_api.json" if end_image_path_local else "/new_Wan22_api.json"
-    logger.info(f"Using {'FLF2V' if end_image_path_local else 'single'} workflow with {lora_count} LoRA pairs")
+    if job_input.get("rife", 'enabled') == 'enabled':
+        workflow_file = "/new_Wan22_flf2v_api_rife.json" if end_image_path_local else "/new_Wan22_api_rife.json"
+        logger.info(f"RIFE 모드 활성화: {'FLF2V' if end_image_path_local else 'single'} 워크플로우 사용")
+    else:
+        workflow_file = "/new_Wan22_flf2v_api.json" if end_image_path_local else "/new_Wan22_api.json"
+        logger.info(f"Using {'FLF2V' if end_image_path_local else 'single'} workflow with {lora_count} LoRA pairs")
     
     prompt = load_workflow(workflow_file)
     
